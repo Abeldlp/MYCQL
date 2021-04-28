@@ -6,6 +6,10 @@
 #include <thread>
 #include <vector>
 #include <stdio.h>
+#include <sstream>
+#include <iterator>
+#include <iostream>
+#include <algorithm>
 
 
 using std::string;
@@ -46,8 +50,6 @@ public :
     void AddRecord(){
         //TODO
     }
-
-    
 };
 
 void CreateTable(){
@@ -75,10 +77,10 @@ void CreateTable(){
 
         vector <string> columnNames;
 
-        for (int i = 0; i < sizeof(columns); i++)
+        for (int i = 1; i < sizeof(columns); i++)
         {
             string columnName;
-            cout << " Column" + to_string(i + 1) + ":";
+            cout << " Column" + to_string(i) + ": ";
             cin >> columnName;
             columnNames.push_back(columnName);
         }
@@ -88,10 +90,13 @@ void CreateTable(){
         std::ofstream FileName;
         FileName.open(tableName);
 
+        std::ostringstream columnsString;
 
+        copy(columnNames.begin(), columnNames.end()-1, ostream_iterator<string>(columnsString, ", "));
         
-        FileName << "Id, Name, Company, Age, Description\n";
-        FileName << "1, 2, 3, 4, 5";
+        columnsString << columnNames.back();
+        
+        FileName << "id," + columnsString.str();
         FileName.close();
         sleep_for(std::chrono::milliseconds(1000));
     }
@@ -124,7 +129,7 @@ int main(){
     while (running) {
         cout << "\n 1 - Create new Table\n";
         cout << " 2 - Add record to exsisting employee\n";
-        cout << " 3 - Add record to exsisting employee\n";
+        cout << " 3 - Add record to exsisting table\n";
         cout << " 4 - Quit the program\n";
         cout << "\n \033[1;31m>\033[0m ";
         cin >> command;
