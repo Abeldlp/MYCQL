@@ -11,7 +11,6 @@
 #include <iostream>
 #include <algorithm>
 
-
 using std::string;
 using namespace std::this_thread;
 using namespace std;
@@ -102,6 +101,44 @@ void CreateTable(){
     }
 }
 
+void AddRecordToTable(){
+    string tableInput;
+    int file_exists;
+    FILE *file;
+
+    cout << "\n What is the Table's name?: ";
+    cin >> tableInput;
+
+    string tableName="./DB/" + tableInput + ".csv";
+    const char * filename=tableName.c_str();
+
+    file=fopen( filename,"r");
+    if (file==NULL) file_exists=0;
+    else {file_exists=1; fclose(file);}
+    
+    if(file_exists == 0){
+        cout << "\n " + tableInput <<" does not exist\n";
+        sleep_for(std::chrono::milliseconds(1000));
+    } else { 
+        ifstream DatabaseTable;
+        DatabaseTable.open(tableName);
+
+        vector<string> columnNames;
+
+        while(DatabaseTable.good()){
+            string line;
+            getline(DatabaseTable, line, ',');
+            columnNames.push_back(line);
+        }
+
+        for (int i = 1; i < sizeof(columnNames); i++)
+        {
+            cout << columnNames[i - 1] + "\n";
+        }
+        
+    }
+}
+
 void CreateEmployee(){
     string name;
     string company;
@@ -128,8 +165,8 @@ int main(){
 
     while (running) {
         cout << "\n 1 - Create new Table\n";
-        cout << " 2 - Add record to exsisting employee\n";
-        cout << " 3 - Add record to exsisting table\n";
+        cout << " 2 - Add record to exsisting table\n";
+        cout << " 3 - Add record to exsisting test\n";
         cout << " 4 - Quit the program\n";
         cout << "\n \033[1;31m>\033[0m ";
         cin >> command;
@@ -139,7 +176,7 @@ int main(){
         }
 
         if(command == 2){
-            CreateEmployee();
+            AddRecordToTable();
         }
 
         if(command == 3){
